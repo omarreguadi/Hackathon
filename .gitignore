@@ -1,6 +1,3 @@
 node_modules
-<<<<<<< HEAD
-=======
 config/keys.js
->>>>>>> features/models
 package-lock.json

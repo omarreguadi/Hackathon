@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: false}));
 // port
 const PORT = process.env.PORT || 5000;
 //Routes
-app.use('/', require('./routes/index'));
+// app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 
 
