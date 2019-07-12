@@ -1,75 +1,63 @@
-const express =require('express');
-const router =express.Router();
-const bcrypt =require('bcryptjs');
+
+const express = require('express');
+const router = express.Router();
+
 
 //User model
+const User = require('../models/User'); // ../ mean out side of model
 
-const User = require('../models/User')
+// page d'inscription
+router.get('/register', (req, res) => res.render('register')); 
 
-//Login Page
-router.get('/Login' , (req, res) => res.render('Login'));
-//Register Page
-router.get('/register' , (req, res) => res.render('Register'));
-//Register Handle
-router.post('/register',(req,  res) =>{
-  console.log(req.body)  
-  const { firstname, lastname, email, Nomprojet, description } = req.body;
-  let errors = [];
+// Manipulation de register
+router.post('/register', (req, res) =>{
+    const {firstName, lastName , email , projectName , textarea} = req.body;
+    let errors = [];
+    console.log("firstname: ", firstName)
+    console.log("lastname: ", lastName)
+    console.log("email: ", email)
+    console.log("projectName: ", projectName)
+    console.log("textarea: ", textarea)
 
-  //check required fields
-  if( !firstname || !lastname || !email || Nomprojet || description){
-    errors.push({msg: 'Please fill in all fields'});
-  }
-  
-  //chack passwords match
-// if(password !== password2){
-//   errors.push({msg: 'les deux passwords ne sont pas identiques'});
-
-// }
-//check pass length
-// if(password.length < 6){
-//   errors.push({msg: 'Password should be at least 6 characters'});
+    // vérification si tous les champs sont remplis
+//not firstname not lastname ...
+if(!firstName || !lastName || !email || projectName || textarea){
+    errors.push ({msg: 'Rempli tous les champs'}) // on push object msg d'erreur 
+}     
+//  else{
+//     res.send('pass')
 // }
 
-if(errors.length > 0) {
-   res.render('register', {
-    errors,
-     firstname,
-     lastname,
-     email,
-     Nomprojet,
-     description
-   });
- }else{
-   //Validation passed
-   User.findOne({email: email })
+//Validation des donnees
+User.findOne({email: email}) //vérification si l'email existe déja dans la base
     .then(user => {
-      if(user){
-        //User exists
-        errors.push({ msg : 'Email is already registred'});
+        if(user) {
+            console.log("yes")
+            //user existe déja
+            errors.push({ msg: 'Cet email existe déjà'})
+            res.render('register',{
+                errors,
+                firstName, 
+                lastName , 
+                email , 
+                projectName , 
+                textarea  
+            });
+        }   else {
+            const newUser = new User(req.body);
+console.log("toto", req.body)
+            //enregistrer user
+            newUser.save()
+            .then(user => {
+                console.log("saved user", user)
+                res.redirect('/users/register')
+            })
+            .catch(err => console.log(err));
 
-        res.render('register', {
-           errors,
-           firstname,
-           lastname,
-           email,
-           Nomprojet,
-           description
-         }); 
-        } else {
-          const newUser = new User({
-            firstname,
-            lastname,
-            email,
-            Nomprojet,
-            description
-          });
-        console.log(newUser)
-        res.send('salut');
-      }
+            // console.log(newUser);
+            // res.send('hello');
+        }
     });
-  
- }
-
 });
-module.exports =router;
+
+module.exports = router;

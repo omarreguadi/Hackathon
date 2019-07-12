@@ -1,32 +1,30 @@
 const express = require('express');
-const expressLayouts = require('express-ejs-Layouts');
+const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
-
+  
+// creation du serveur
 const app = express();
 
+// configuration DB
+const db = require('./config/keys');
+console.log(db);
+//se connecter à la DB
+mongoose.connect(db.MongoURI, { useNewUrlParser: true })
+     .then(() => console.log('MongoDB connected...')) 
+     .catch(err => console.log(err));
 
-
-// DB config
-
-const db =require('./config/keys').MongoURI;
-
-//connect to mongo
-mongoose.connect(db, {useNewUrlParser: true})
-.then(() => console.log('MongoDB Connected ...'))
-.catch(err => console.log(err));
-
-//ejs
+//EJS
 app.use(expressLayouts);
 app.set('view engine','ejs');
 
 // Bodyparser
+app.use(express.urlencoded({ extended: false}));
 
-app.use(express.urlencoded({  extended: false  }));
-
-// Routes
+// port
+const PORT = process.env.PORT || 5000;
+//Routes
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 
-const PORT =process.env.PORT || 5000;
 
-app.listen(PORT, console.log(`Server started on port ${PORT}`));
+app.listen(PORT, console.log(`port serveur :  ${PORT} `)); 
