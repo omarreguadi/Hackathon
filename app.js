@@ -1,27 +1,32 @@
-
-// fichier de configuration
-//librarie express
 const express = require('express');
+const expressLayouts = require('express-ejs-Layouts');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 
 const app = express();
 
-mongoose.Promise = global.Promise;
-//connecter coursnodedb database
-mongoose.connect ('mongodb://localhost/Tpnodedb', { useNewUrlParser: true });
 
 
-//possibilités de lire tous les instru imbriqués le use pour lui dire que tu utilise telle librairie
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
-//creer un module
-const routes = require('./api/routes/formRoutes');
-// particularites du node  maniere de definir les routes dans sa globalité
-routes(app);
-//ip du serveur
-const hostname = '127.0.0.1';
-//port
-const port = 3600;
-// on ecoute bien sur le port et sur le hostname
-app.listen(port, hostname);
+// DB config
+
+const db =require('./config/keys').MongoURI;
+
+//connect to mongo
+mongoose.connect(db, {useNewUrlParser: true})
+.then(() => console.log('MongoDB Connected ...'))
+.catch(err => console.log(err));
+
+//ejs
+app.use(expressLayouts);
+app.set('view engine','ejs');
+
+// Bodyparser
+
+app.use(express.urlencoded({  extended: false  }));
+
+// Routes
+app.use('/', require('./routes/index'));
+app.use('/users', require('./routes/users'));
+
+const PORT =process.env.PORT || 5000;
+
+app.listen(PORT, console.log(`Server started on port ${PORT}`));

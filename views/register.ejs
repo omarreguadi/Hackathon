@@ -1,0 +1,71 @@
+<!-- formulaire inscription hackathon -->
+<div class="row mt-5">
+    <div class="col-md-6 m-auto">
+      <div class="card card-body">
+        <h1 class="text-center mb-3">
+          <i class="fas fa-user-plus"></i> Inscription
+        </h1>
+        <% include ./partials/messages %>
+        <form action="/users/register" method="POST">
+          <div class="form-group">
+            <label for="name">Nom</label>
+            <input
+              type="name"
+              id="name"
+              name="firstname"
+              class="form-control"
+              placeholder="Nom de l'étudiant"
+              value="<%= typeof name != 'undefined' ? name : '' %>"
+            />
+            <div class="form-group">
+                    <label for="name">Prénom</label>
+                    <input
+                      type="name"
+                      id="name"
+                      name="lastname"
+                      class="form-control"
+                      placeholder="Prénom de l'étudiant"
+                      value="<%= typeof name != 'undefined' ? name : '' %>"
+                    />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-control"
+              placeholder="Email"
+              value="<%= typeof email != 'undefined' ? email : '' %>"
+            />
+          </div>
+          <div class="form-group">
+            <label for="Nomprojet">Nom du projet</label>
+            <input
+              type="projectName"
+              id="Nomprojet"
+              name="Nomprojet"
+              class="form-control"
+              placeholder="Nom du projet"
+              value="<%= typeof Nomprojet != 'undefined' ? Nomprojet : '' %>"
+            />
+          </div>
+          <div class="form-group">
+                <label for="Textarea">Description du projet</label>
+                <textarea 
+                 type="projectName"
+                 name="Description"
+                 id="Textarea"
+                 rows="8" 
+                 cols="66"
+                 placeholder="Texte pour un projet à soumettre" 
+                 value="<%= typeof Textarea != 'undefined' ? Textarea : '' %>"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">
+            inscription
+          </button>
+        </form>
+        <!-- <p class="lead mt-4">Have An Account? <a href="/login">Login</a></p> -->
+      </div>
+    </div>
+  </div>
